@@ -1,0 +1,34 @@
+<svg width="1920" height="400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#D4AF37;stop-opacity:0.95" />
+      <stop offset="50%" style="stop-color:#B88E2F;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#A67C00;stop-opacity:0.95" />
+    </linearGradient>
+    <pattern id="furniture" patternUnits="userSpaceOnUse" width="200" height="200" patternTransform="rotate(45)">
+      <rect width="200" height="200" fill="url(#heroGrad)"/>
+      <g opacity="0.15">
+        <!-- Chair -->
+        <rect x="20" y="80" width="30" height="60" fill="#ffffff" rx="3"/>
+        <rect x="15" y="140" width="40" height="40" fill="#ffffff" rx="5"/>
+        <!-- Table -->
+        <ellipse cx="120" cy="100" rx="40" ry="10" fill="#ffffff"/>
+        <rect x="110" y="110" width="20" height="40" fill="#ffffff"/>
+        <!-- Sofa -->
+        <rect x="160" y="90" width="60" height="30" fill="#ffffff" rx="8"/>
+        <rect x="155" y="85" width="15" height="35" fill="#ffffff" rx="8"/>
+      </g>
+    </pattern>
+  </defs>
+  
+  <rect width="1920" height="400" fill="url(#furniture)"/>
+  
+  <!-- Lighter overlay for text readability -->
+  <rect width="1920" height="400" fill="rgba(0,0,0,0.1)"/>
+  
+  <!-- Decorative elements -->
+  <circle cx="150" cy="80" r="40" fill="rgba(255,255,255,0.08)"/>
+  <circle cx="1770" cy="320" r="60" fill="rgba(255,255,255,0.08)"/>
+  <circle cx="960" cy="50" r="25" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="1400" cy="150" r="35" fill="rgba(255,255,255,0.09)"/>
+</svg>

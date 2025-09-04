@@ -78,7 +78,8 @@
             </div>
         </div>
     </div>
-    
+
+    <!-- Charts Section -->
     <div class="charts-section">
         <div class="charts-grid">
             <div class="chart-container">
@@ -105,20 +106,38 @@
                 <canvas id="orderedProductsChart"></canvas>
             </div>
             
-            <div class="chart-container">
+            <div class="chart-container orders-container">
                 <div class="chart-header">
-                    <h3>{{ __('New Orders') }}</h3>
-                    <p class="chart-subtitle">{{ __('Number of new orders created') }}</p>
+                    <h3>{{ __('Orders') }}</h3>
+                    <p class="chart-subtitle">{{ __('Order management and completion tracking') }}</p>
                 </div>
-                <canvas id="newOrdersChart"></canvas>
+                <div class="dual-chart-layout">
+                    <div class="chart-section">
+                        <h4>{{ __('New Orders') }}</h4>
+                        <canvas id="newOrdersChart"></canvas>
+                    </div>
+                    <div class="chart-section">
+                        <h4>{{ __('Completed Orders') }}</h4>
+                        <canvas id="completedOrdersChart"></canvas>
+                    </div>
+                </div>
             </div>
             
-            <div class="chart-container">
+            <div class="chart-container feedback-container">
                 <div class="chart-header">
                     <h3>{{ __('Customer Feedback') }}</h3>
-                    <p class="chart-subtitle">{{ __('Number of new feedback received') }}</p>
+                    <p class="chart-subtitle">{{ __('Feedback trends and rating analysis') }}</p>
                 </div>
-                <canvas id="newFeedbacksChart"></canvas>
+                <div class="dual-chart-layout">
+                    <div class="chart-section">
+                        <h4>{{ __('New Feedback') }}</h4>
+                        <canvas id="newFeedbacksChart"></canvas>
+                    </div>
+                    <div class="chart-section">
+                        <h4>{{ __('Rating Distribution') }}</h4>
+                        <canvas id="ratingDistributionChart"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -128,6 +147,19 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 const TIMEOUT_MS = 200;
+
+window.dashboardTranslations = {
+    completed: "{{ __('Completed') }}",
+    pending: "{{ __('Pending') }}",
+    oneStar: "{{ __('1 star') }}",
+    twoStars: "{{ __('2 stars') }}",
+    threeStars: "{{ __('3 stars') }}",
+    fourStars: "{{ __('4 stars') }}",
+    fiveStars: "{{ __('5 stars') }}",
+    orders: "{{ __('orders') }}",
+    reviews: "{{ __('Reviews') }}"
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     function initCharts() {
         if (typeof Chart !== 'undefined' && typeof window.loadWeeklyCharts === 'function') {

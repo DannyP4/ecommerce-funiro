@@ -344,6 +344,10 @@ body {
     grid-column: span 1;
 }
 
+.orders-container, .feedback-container {
+    grid-column: 1 / -1 !important;
+}
+
 @media (max-width: 768px) {
     .charts-grid {
         grid-template-columns: 1fr;
@@ -1502,4 +1506,64 @@ select.form-control:focus {
 
 .custom-notification button:hover {
     background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.orders-container, .feedback-container {
+    grid-column: 1 / -1 !important;
+    margin-bottom: 30px;
+}
+
+.dual-chart-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.chart-section {
+    position: relative;
+}
+
+.chart-section h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.chart-section canvas {
+    width: 100% !important;
+    height: 280px !important;
+    max-height: 280px;
+}
+
+.dual-chart-layout .chart-section:last-child canvas {
+    height: 250px !important;
+    max-height: 250px;
+}
+
+.orders-container { 
+    border-top-color: #fd7e14;
+}
+
+.feedback-container { 
+    border-top-color: #6f42c1;
+}
+
+@media (max-width: 768px) {
+    .dual-chart-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .chart-section canvas {
+        height: 220px !important;
+    }
+    
+    .dual-chart-layout .chart-section:last-child canvas {
+        height: 200px !important;
+    }
 }

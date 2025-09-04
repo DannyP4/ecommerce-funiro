@@ -663,5 +663,16 @@
     "From Delivering status, you can only mark as Delivered.": "配送中のステータスから、配達済みにマークすることができます。",
     "Shipping Fee": "配送料",
     "more for free shipping!": "無料配送のためにさらに！",
-    "You got free shipping!": "あなたは無料配送を手に入れました！"
+    "You got free shipping!": "あなたは無料配送を手に入れました！",
+    "Order management and completion tracking": "注文管理と完了追跡",
+    "Completed Orders": "完了した注文",
+    "Feedback trends and rating analysis": "フィードバックの傾向と評価の分析",
+    "New Feedback": "新しいフィードバック",
+    "Rating Distribution": "評価の分布",
+    "Completed": "Hoàn thành",
+    "1 star": "1 sao",
+    "2 stars": "2 sao",
+    "3 stars": "3 sao",
+    "4 stars": "4 sao",
+    "5 stars": "5 sao"
 }

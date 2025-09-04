@@ -76,8 +76,8 @@ class AdminController extends Controller
         // get data for the last 7 days
         for ($i = 6; $i >= 0; $i--) {
             $date = now()->subDays($i);
-            $days[] = $date->format('M d');
-            $dateString = $date->format('Y-m-d');
+            $days[] = $date->translatedFormat('M d');
+            $dateString = $date->translatedFormat('Y-m-d');
             
             // the number of active users (who placed orders or left feedback ...)
             $usersWithOrders = User::whereHas('orders', function($query) use ($dateString) {
@@ -118,13 +118,32 @@ class AdminController extends Controller
             $dailyRevenue[] = (float) $revenue;
         }
 
+        $lastWeekStart = now()->subDays(6)->startOfDay();
+        $lastWeekEnd = now()->endOfDay();
+        
+        $completedOrders = Order::where('status', 'delivered')
+            ->whereBetween('updated_at', [$lastWeekStart, $lastWeekEnd])
+            ->count();
+            
+        $totalOrdersThisWeek = Order::whereBetween('order_date', [$lastWeekStart, $lastWeekEnd])
+            ->count();
+
+        $ratingDistribution = [];
+        for ($rating = 1; $rating <= 5; $rating++) {
+            $count = Feedback::where('rating', $rating)->count();
+            $ratingDistribution[] = $count;
+        }
+
         return response()->json([
             'days' => $days,
             'activeUsers' => $activeUsers,
             'orderedProducts' => $orderedProducts,
             'newOrders' => $newOrders,
             'newFeedbacks' => $newFeedbacks,
-            'dailyRevenue' => $dailyRevenue
+            'dailyRevenue' => $dailyRevenue,
+            'completedOrders' => $completedOrders,
+            'totalOrdersThisWeek' => $totalOrdersThisWeek,
+            'ratingDistribution' => $ratingDistribution
         ]);
     }
 

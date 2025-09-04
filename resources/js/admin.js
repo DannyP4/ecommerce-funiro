@@ -27,6 +27,8 @@ class AdminPanel {
                 this.renderOrderedProductsChart(data);
                 this.renderNewOrdersChart(data);
                 this.renderNewFeedbacksChart(data);
+                this.renderCompletedOrdersChart(data);
+                this.renderRatingDistributionChart(data);
             })
             .catch(error => {
                 console.error('Failed to load chart data:', error);
@@ -246,6 +248,177 @@ class AdminPanel {
                             }
                         }
                     }
+                }
+            }
+        });
+    }
+
+    renderCompletedOrdersChart(data) {
+        const ctx = document.getElementById('completedOrdersChart');
+        if (!ctx) return;
+
+        // calculate pending orders in the week
+        const completedOrders = data.completedOrders || 0;
+        const totalOrders = data.totalOrdersThisWeek || 1;
+        const pendingOrders = Math.max(0, totalOrders - completedOrders);
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    window.dashboardTranslations?.completed || 'Completed',
+                    window.dashboardTranslations?.pending || 'Pending'
+                ],
+                datasets: [{
+                    data: [completedOrders, pendingOrders],
+                    backgroundColor: [
+                        '#28a745', // Green - completed
+                        '#ffc107'  // Yellow - pending
+                    ],
+                    borderColor: [
+                        '#1e7e34',
+                        '#e0a800'
+                    ],
+                    borderWidth: 2,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        borderColor: '#28a745',
+                        borderWidth: 2,
+                        cornerRadius: 8,
+                        displayColors: true,
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                const ordersText = window.dashboardTranslations?.orders || 'orders';
+                                return context.label + ': ' + context.parsed + ' ' + ordersText + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                },
+                cutout: '60%',
+                animation: {
+                    animateRotate: true,
+                    duration: 1000
+                }
+            }
+        });
+    }
+
+    renderRatingDistributionChart(data) {
+        const ctx = document.getElementById('ratingDistributionChart');
+        if (!ctx) return;
+
+        // Sample data for rating distribution (1-5 stars)
+        const ratingData = data.ratingDistribution || [0, 0, 0, 0, 0]; // Default empty data
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [
+                    window.dashboardTranslations?.oneStar || '1 star',
+                    window.dashboardTranslations?.twoStars || '2 stars', 
+                    window.dashboardTranslations?.threeStars || '3 stars',
+                    window.dashboardTranslations?.fourStars || '4 stars',
+                    window.dashboardTranslations?.fiveStars || '5 stars'
+                ],
+                datasets: [{
+                    label: 'Number of reviews',
+                    data: ratingData,
+                    backgroundColor: [
+                        '#dc3545',
+                        '#fd7e14',
+                        '#ffc107',
+                        '#28a745',
+                        '#007bff'
+                    ],
+                    borderColor: [
+                        '#c82333',
+                        '#e0670b',
+                        '#e0a800',
+                        '#1e7e34',
+                        '#0056b3'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 4,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        borderColor: '#ffc107',
+                        borderWidth: 2,
+                        cornerRadius: 8,
+                        displayColors: false,
+                        callbacks: {
+                            title: function(context) {
+                                return context[0].label;
+                            },
+                            label: function(context) {
+                                const reviewsText = window.dashboardTranslations?.reviews || 'Reviews';
+                                return reviewsText + ': ' + context.parsed.y;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#6c757d',
+                            font: {
+                                size: 11
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)',
+                            lineWidth: 1
+                        },
+                        ticks: {
+                            color: '#6c757d',
+                            font: {
+                                size: 11
+                            },
+                            stepSize: 1
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
                 }
             }
         });

@@ -475,8 +475,14 @@
 
 @section('scripts')
 <script>
-// Script for Add to Cart functionality
+// script for Add to Cart functionality
 document.addEventListener('DOMContentLoaded', function () {
+    const savedScrollPosition = sessionStorage.getItem('scrollPosition');
+    if (savedScrollPosition) {
+        window.scrollTo(0, parseInt(savedScrollPosition));
+        sessionStorage.removeItem('scrollPosition');
+    }
+
     // Get the CSRF token from the meta tag in the document head.
     // This token is essential for Laravel to protect against Cross-Site Request Forgery (CSRF) attacks.
     var csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
@@ -517,6 +523,8 @@ document.addEventListener('DOMContentLoaded', function () {
             // Append the dynamically created form to the document body.
             // This is necessary for the form to be submit-able by JavaScript.
             document.body.appendChild(form);
+
+            sessionStorage.setItem('scrollPosition', window.scrollY);
 
             // Submit the form programmatically.
             // This will trigger a POST request to the specified URL.

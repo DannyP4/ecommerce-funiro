@@ -38,7 +38,7 @@ class FeedbackController extends Controller
                 'rating' => $request->rating
             ]);
             
-            return redirect()->route('customer.feedbacks', $productId)->with('success', 'Feedback updated successfully!');
+            return redirect()->route('customer.feedbacks', $productId)->with('success', __('Feedback updated successfully!'));
         }
 
         // Create new feedback
@@ -49,7 +49,7 @@ class FeedbackController extends Controller
             'rating' => $request->rating
         ]);
 
-        return redirect()->route('customer.feedbacks', $productId)->with('success', 'Feedback submitted successfully!');
+        return redirect()->route('customer.feedbacks', $productId)->with('success', __('Feedback submitted successfully!'));
     }
 
     public function destroy($feedbackId)
@@ -61,6 +61,6 @@ class FeedbackController extends Controller
         $productId = $feedback->product_id;
         $feedback->delete();
 
-        return redirect()->route('customer.feedbacks', $productId)->with('success', 'Feedback deleted successfully!');
+        return redirect()->route('customer.feedbacks', $productId)->with('success', __('Feedback deleted successfully!'));
     }
 }

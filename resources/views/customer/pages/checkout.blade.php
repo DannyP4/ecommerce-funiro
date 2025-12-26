@@ -42,11 +42,13 @@
     </div>
 @endif
 
-<div class="checkout-wrapper">
-    <div class="checkout-main">
-        <!-- Order Items -->
-        <div class="section-card">
-            <h3>{{ __('Order Items') }}</h3>
+<form action="{{ route('customer.checkout.store') }}" method="POST" id="checkoutForm">
+    @csrf
+    <div class="checkout-wrapper">
+        <div class="checkout-main">
+            <!-- Order Items -->
+            <div class="section-card">
+                <h3>{{ __('Order Items') }}</h3>
             <div class="cart-table">
                 <div class="cart-header">
                     <div class="col-product">{{ __('Product') }}</div>
@@ -101,11 +103,9 @@
         <!-- Payment Method -->
         <div class="section-card">
             <h3>{{ __('Payment Method') }}</h3>
-            <form action="{{ route('customer.checkout.store') }}" method="POST" id="checkoutForm">
-                @csrf
-                <div class="payment-methods">
+            <div class="payment-methods">
                     <div class="payment-option">
-                        <input type="radio" id="cod" name="payment_method" value="cod" checked style="display: none;">
+                        <input type="radio" id="cod" name="payment_method" value="cod" checked>
                         <label for="cod" class="payment-label">
                             <div class="payment-icon">
                                 <i class="fas fa-hand-holding-usd"></i>
@@ -116,12 +116,24 @@
                             </div>
                         </label>
                     </div>
+                    
+                    <div class="payment-option">
+                        <input type="radio" id="vnpay" name="payment_method" value="vnpay">
+                        <label for="vnpay" class="payment-label">
+                            <div class="payment-icon vnpay-icon">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div class="payment-details">
+                                <h4>{{ __('VNPay') }}</h4>
+                                <p>{{ __('Pay with ATM card, Credit card, or QR code') }}</p>
+                            </div>
+                        </label>
+                    </div>
                 </div>
-            </form>
+            </div>
         </div>
-    </div>
 
-    <div class="checkout-summary">
+        <div class="checkout-summary">
         <h3>{{ __('Order Summary') }}</h3>
         <div class="summary-row">
             <span>{{ __('Items') }}</span>
@@ -151,6 +163,7 @@
         </div>
         <button type="button" class="btn-primary full" onclick="showPlaceOrderModal()">{{ __('Place Order') }}</button>
     </div>
+</form>
 </div>
 
 @include('customer.components.modals', [
@@ -333,19 +346,26 @@
 
 .payment-option input[type="radio"] {
     position: absolute;
-    opacity: 0;
-    pointer-events: none;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 1;
+    pointer-events: auto;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
 }
 
 .payment-label {
     display: flex;
     align-items: center;
-    padding: 16px;
+    padding: 16px 16px 16px 50px;
     border: 2px solid #E5E5E5;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
     background: #fff;
+    position: relative;
 }
 
 .payment-option input[type="radio"]:checked + .payment-label {
@@ -364,6 +384,10 @@
     margin-right: 16px;
     font-size: 20px;
     color: #B88E2F;
+}
+
+.payment-icon.vnpay-icon {
+    background: #e8f5e9;
 }
 
 .payment-details h4 {

@@ -82,15 +82,26 @@ class EloquentOrderRepository implements OrderRepository
 
     public function getTotalRevenue(): float
     {
-        return Order::whereIn('status', ['delivering', 'delivered'])
-            ->sum('total_cost');
+        return Order::where(function($query) {
+            $query->whereIn('status', ['delivering', 'delivered'])
+                  ->orWhere(function($q) {
+                      $q->where('payment_status', 'paid')
+                        ->where('status', '!=', 'cancelled');
+                  });
+        })->sum('total_cost');
     }
 
     public function getRevenueByDateRange(string $startDate, string $endDate): float
     {
-        return Order::whereIn('status', ['delivering', 'delivered'])
-            ->whereBetween('order_date', [$startDate, $endDate])
-            ->sum('total_cost');
+        return Order::where(function($query) {
+            $query->whereIn('status', ['delivering', 'delivered'])
+                  ->orWhere(function($q) {
+                      $q->where('payment_status', 'paid')
+                        ->where('status', '!=', 'cancelled');
+                  });
+        })
+        ->whereBetween('order_date', [$startDate, $endDate])
+        ->sum('total_cost');
     }
 
     public function count(): int
@@ -132,15 +143,22 @@ class EloquentOrderRepository implements OrderRepository
     
     public function getRevenueByDate(string $date): float
     {
-        return Order::where('status', 'delivered')
-            ->where(function($query) use ($date) {
-                $query->whereDate('updated_at', $date)
-                      ->orWhere(function($subQuery) use ($date) {
-                          $subQuery->whereDate('created_at', $date)
-                                   ->where('status', 'delivered');
-                      });
+        return Order::where(function($query) use ($date) {
+            $query->where(function($q) use ($date) {
+                $q->where('payment_method', 'cod')
+                  ->where('status', 'delivered')
+                  ->whereDate('updated_at', $date);
             })
-            ->sum('total_cost');
+            ->orWhere(function($q) use ($date) {
+                $q->where('payment_method', 'vnpay')
+                  ->where('payment_status', 'paid')
+                  ->where('status', '!=', 'cancelled')
+                  ->where(function($dateQ) use ($date) {
+                      $dateQ->whereDate('order_date', $date)
+                           ->orWhereDate('updated_at', $date);
+                  });
+            });
+        })->sum('total_cost');
     }
     
     public function countDeliveredBetween($startDate, $endDate): int

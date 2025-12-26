@@ -14,10 +14,21 @@ class Order extends Model
 
     protected $primaryKey = 'order_id';
 
-    protected $fillable = ['customer_id', 'order_date', 'total_cost', 'shipping_fee', 'status'];
+    protected $fillable = [
+        'customer_id', 
+        'order_date', 
+        'total_cost', 
+        'shipping_fee', 
+        'status',
+        'payment_method',
+        'payment_status',
+        'transaction_id',
+        'vnpay_data'
+    ];
 
     protected $casts = [
         'order_date' => 'datetime',
+        'vnpay_data' => 'array',
     ];
 
     public function user(): BelongsTo

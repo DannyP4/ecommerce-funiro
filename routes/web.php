@@ -62,6 +62,9 @@ Route::middleware(['auth', 'check.user.activation'])->prefix('customer')->name('
     // Checkout routes
     Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    
+    // VNPay callback routes
+    Route::get('/checkout/vnpay/return', [CheckoutController::class, 'vnpayReturn'])->name('checkout.vnpay.return');
 
     // Feedback routes
     Route::get('/feedbacks/{product}', [FeedbackController::class, 'index'])->name('feedbacks');

@@ -296,6 +296,13 @@ class CustomerController extends Controller
         }
         
         try {
+            // Restore product stock
+            $orderItems = $order->orderItems;
+            foreach ($orderItems as $item) {
+                Product::where('product_id', $item->product_id)
+                    ->increment('stock', $item->quantity);
+            }
+            
             // Update order status to cancelled
             $order->update(['status' => 'cancelled']);
             

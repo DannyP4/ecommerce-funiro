@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Order;
+use App\Repositories\CategoryRepository;
+use App\Repositories\ProductRepository;
+use App\Repositories\OrderRepository;
 use App\Services\ShippingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,10 +18,20 @@ class CustomerController extends Controller
     const ORDER_STATUSES_HISTORY = ['rejected', 'cancelled', 'delivered'];
     
     protected $shippingService;
+    protected $categoryRepository;
+    protected $productRepository;
+    protected $orderRepository;
 
-    public function __construct(ShippingService $shippingService)
-    {
+    public function __construct(
+        ShippingService $shippingService,
+        CategoryRepository $categoryRepository,
+        ProductRepository $productRepository,
+        OrderRepository $orderRepository
+    ) {
         $this->shippingService = $shippingService;
+        $this->categoryRepository = $categoryRepository;
+        $this->productRepository = $productRepository;
+        $this->orderRepository = $orderRepository;
     }
     
     /**

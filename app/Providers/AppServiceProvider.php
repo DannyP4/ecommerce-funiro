@@ -18,6 +18,31 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\EloquentCategoryRepository::class
         );
 
+        $this->app->bind(
+            \App\Repositories\ProductRepository::class,
+            \App\Repositories\EloquentProductRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\OrderRepository::class,
+            \App\Repositories\EloquentOrderRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\UserRepository::class,
+            \App\Repositories\EloquentUserRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\FeedbackRepository::class,
+            \App\Repositories\EloquentFeedbackRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\NotificationRepository::class,
+            \App\Repositories\EloquentNotificationRepository::class
+        );
+
         $this->app->singleton(\App\Services\ShippingService::class, function ($app) {
             return new \App\Services\ShippingService();
         });

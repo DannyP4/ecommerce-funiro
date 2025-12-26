@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
-use App\Models\Product;
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Feedback;
@@ -24,27 +24,44 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\StatusOrder;
 use App\Repositories\CategoryRepository;
+use App\Repositories\ProductRepository;
+use App\Repositories\OrderRepository;
+use App\Repositories\UserRepository;
+use App\Repositories\FeedbackRepository;
 
 class AdminController extends Controller
 {
     private const PRODUCT_IMAGE_DIR = 'images/products';
 
     protected $categoryRepository;
+    protected $productRepository;
+    protected $orderRepository;
+    protected $userRepository;
+    protected $feedbackRepository;
 
-    public function __construct(CategoryRepository $categoryRepository)
-    {
+    public function __construct(
+        CategoryRepository $categoryRepository,
+        ProductRepository $productRepository,
+        OrderRepository $orderRepository,
+        UserRepository $userRepository,
+        FeedbackRepository $feedbackRepository
+    ) {
         $this->categoryRepository = $categoryRepository;
+        $this->productRepository = $productRepository;
+        $this->orderRepository = $orderRepository;
+        $this->userRepository = $userRepository;
+        $this->feedbackRepository = $feedbackRepository;
     }
 
     public function dashboard()
     {
         $stats = [
-            'total_users' => User::count(),
+            'total_users' => $this->userRepository->count(),
             'total_categories' => $this->categoryRepository->count(),
-            'total_products' => Product::count(),
-            'total_orders' => Order::count(),
-            'pending_orders' => Order::where('order_id', '>', 0)->count(),
-            'total_feedbacks' => Feedback::count()
+            'total_products' => $this->productRepository->count(),
+            'total_orders' => $this->orderRepository->count(),
+            'pending_orders' => $this->orderRepository->countByStatus('pending'),
+            'total_feedbacks' => $this->feedbackRepository->count()
         ];
         
         return view('admin.pages.dashboard', compact('stats'));
@@ -53,12 +70,12 @@ class AdminController extends Controller
     public function dashboardStats()
     {
         $stats = [
-            'total_users' => User::count(),
+            'total_users' => $this->userRepository->count(),
             'total_categories' => $this->categoryRepository->count(),
-            'total_products' => Product::count(),
-            'total_orders' => Order::count(),
-            'pending_orders' => Order::where('order_id', '>', 0)->count(),
-            'total_feedbacks' => Feedback::count()
+            'total_products' => $this->productRepository->count(),
+            'total_orders' => $this->orderRepository->count(),
+            'pending_orders' => $this->orderRepository->countByStatus('pending'),
+            'total_feedbacks' => $this->feedbackRepository->count()
         ];
         
         return response()->json($stats);
@@ -98,39 +115,28 @@ class AdminController extends Controller
             $orderedProducts[] = (int) $orderedProductCount;
             
             // the number of new orders in the day
-            $newOrderCount = Order::whereDate('order_date', $dateString)->count();
+            $newOrderCount = $this->orderRepository->countByDate($dateString);
             $newOrders[] = $newOrderCount;
             
             // the number of new feedbacks in the day
-            $newFeedbackCount = Feedback::whereDate('created_at', $dateString)->count();
+            $newFeedbackCount = $this->feedbackRepository->countByDate($dateString);
             $newFeedbacks[] = $newFeedbackCount;
             
             // daily revenue from delivered orders
-            $revenue = Order::where('status', 'delivered')
-                ->where(function($query) use ($dateString) {
-                    $query->whereDate('updated_at', $dateString)
-                          ->orWhere(function($subQuery) use ($dateString) {
-                              $subQuery->whereDate('created_at', $dateString)
-                                       ->where('status', 'delivered');
-                          });
-                })
-                ->sum('total_cost');
+            $revenue = $this->orderRepository->getRevenueByDate($dateString);
             $dailyRevenue[] = (float) $revenue;
         }
 
         $lastWeekStart = now()->subDays(6)->startOfDay();
         $lastWeekEnd = now()->endOfDay();
         
-        $completedOrders = Order::where('status', 'delivered')
-            ->whereBetween('updated_at', [$lastWeekStart, $lastWeekEnd])
-            ->count();
+        $completedOrders = $this->orderRepository->countDeliveredBetween($lastWeekStart, $lastWeekEnd);
             
-        $totalOrdersThisWeek = Order::whereBetween('order_date', [$lastWeekStart, $lastWeekEnd])
-            ->count();
+        $totalOrdersThisWeek = $this->orderRepository->countByDateRange($lastWeekStart, $lastWeekEnd);
 
         $ratingDistribution = [];
         for ($rating = 1; $rating <= 5; $rating++) {
-            $count = Feedback::where('rating', $rating)->count();
+            $count = $this->feedbackRepository->countByRating($rating);
             $ratingDistribution[] = $count;
         }
 
@@ -149,7 +155,7 @@ class AdminController extends Controller
 
     public function users()
     {
-        $users = User::orderBy('updated_at', 'desc')->paginate(10);
+        $users = $this->userRepository->getAllUsers(10);
         $roles = Role::all(); // Lấy tất cả roles để tạo filter dropdown
         return view('admin.pages.users', compact('users', 'roles'));
     }
@@ -162,11 +168,7 @@ class AdminController extends Controller
         }
 
         $validated = $request->validated();
-        
-        if (isset($validated['password'])) {
-            $validated['password'] = bcrypt($validated['password']);
-        }
-        User::create($validated);
+        $this->userRepository->createUser($validated);
         return redirect()->route('admin.users')->with('success', 'User created successfully.');
     }
 
@@ -183,7 +185,7 @@ class AdminController extends Controller
         }
 
         $validated = $request->validated();
-        $user->update($validated);
+        $this->userRepository->updateUser($user->id, $validated);
         return redirect()->route('admin.users')->with('success', 'User updated successfully.');
     }
 
@@ -213,7 +215,7 @@ class AdminController extends Controller
             ], 403);
         }
 
-        $user->delete();
+        $this->userRepository->deleteUser($user->id);
         return response()->json(['success' => true]);
     }
 
@@ -305,7 +307,7 @@ class AdminController extends Controller
 
     public function products()
     {
-        $products = Product::with('category')->orderBy('updated_at', 'desc')->paginate(10); // paginate products (10 per page)
+        $products = $this->productRepository->getAllProducts(10);
         $categories = $this->categoryRepository->getAllCategories();
         return view('admin.pages.products', compact('products', 'categories'));
     }
@@ -313,58 +315,38 @@ class AdminController extends Controller
     public function storeProduct(StoreProductRequest $request)
     {
         $validated = $request->validated();
-        $imagePath = null;
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $allowedExtensions = ['jpeg', 'jpg', 'png', 'gif', 'svg'];
-            $extension = $image->guessExtension();
-            if (!in_array($extension, $allowedExtensions)) {
-                return redirect()->back()->withErrors(['image' => 'Invalid image extension.']);
-            }
-            $imageName = Str::uuid() . '.' . $extension;
-            $image->move(public_path(self::PRODUCT_IMAGE_DIR), $imageName);
-            $validated['image'] = self::PRODUCT_IMAGE_DIR . '/' . $imageName;
+            $validated['image'] = $request->file('image');
         }
 
-        Product::create($validated);
-        return redirect()->route('admin.products')->with('success', 'Product added successfully.');
+        try {
+            $this->productRepository->createProduct($validated);
+            return redirect()->route('admin.products')->with('success', 'Product added successfully.');
+        } catch (\InvalidArgumentException $e) {
+            return redirect()->back()->withErrors(['image' => $e->getMessage()])->withInput();
+        }
     }
 
     public function updateProduct(UpdateProductRequest $request, $productId)
     {
-        $product = Product::where('product_id', $productId)->firstOrFail();
-        
         $validated = $request->validated();
 
         if ($request->hasFile('image')) {
-            // delete the old image
-            if ($product->image && File::exists(public_path($product->image))) {
-                File::delete(public_path($product->image));
-            }
-            
-            $image = $request->file('image');
-            $imageName = Str::uuid() . '.' . $image->extension();
-            $image->move(public_path(self::PRODUCT_IMAGE_DIR), $imageName);
-            $validated['image'] = self::PRODUCT_IMAGE_DIR . '/' . $imageName;
+            $validated['image'] = $request->file('image');
         }
 
-        $product->update($validated);
-        return redirect()->route('admin.products')->with('success', 'Product updated successfully.');
+        try {
+            $this->productRepository->updateProduct($productId, $validated);
+            return redirect()->route('admin.products')->with('success', 'Product updated successfully.');
+        } catch (\InvalidArgumentException $e) {
+            return redirect()->back()->withErrors(['image' => $e->getMessage()])->withInput();
+        }
     }
 
     public function deleteProduct($productId)
     { 
-        $product = Product::where('product_id', $productId)->firstOrFail();
-        
-        // delete the old image
-        if ($product->image) {
-            if (File::exists(public_path($product->image))) {
-                File::delete(public_path($product->image));
-            }
-        }
-        
-        $product->delete();
+        $this->productRepository->deleteProduct($productId);
         return response()->json(['success' => true]);
     }
 
@@ -373,23 +355,7 @@ class AdminController extends Controller
         $query = $request->input('query');
         $categoryId = $request->input('category_id');
         
-        $productsQuery = Product::with('category');
-        
-        // search filter
-        if (!empty($query)) {
-            // $productsQuery->where(function($q) use ($query) {
-            //     $q->where('name', 'like', "%{$query}%");
-            // }); // use this if we want to search in multiple fields
-
-            $productsQuery->where('name', 'like', "%{$query}%");
-        }
-        
-        // category filter
-        if (!empty($categoryId) && $categoryId !== 'all') {
-            $productsQuery->where('category_id', $categoryId);
-        }
-        
-        $products = $productsQuery->paginate(10);
+        $products = $this->productRepository->searchProducts($query, $categoryId, 10);
         $categories = $this->categoryRepository->getAllCategories();
         
         // ensure that search parameters are kept in pagination links
@@ -400,37 +366,26 @@ class AdminController extends Controller
 
     public function orders(Request $request)
     {
-        $query = Order::with('user')->orderBy('updated_at', 'desc');
-
-        // Filter by status
-        if ($request->filled('status')) {
-            $query->where('status', $request->input('status'));
-        }
-
-        // Filter by date range
-        if ($request->filled('from_date')) {
-            $query->whereDate('order_date', '>=', $request->input('from_date'));
-        }
-
-        if ($request->filled('to_date')) {
-            $query->whereDate('order_date', '<=', $request->input('to_date'));
-        }
-
-        // Order by most recent first
-        $orders = $query->orderBy('order_date', 'desc')->paginate(10);
+        $filters = [
+            'status' => $request->input('status'),
+            'from_date' => $request->input('from_date'),
+            'to_date' => $request->input('to_date')
+        ];
+        
+        $orders = $this->orderRepository->getFilteredOrders($filters, 10);
 
         return view('admin.pages.orders', compact('orders'));
     }
 
     public function feedbacks()
     {
-        $feedbacks = Feedback::with('user', 'product')->orderBy('updated_at', 'desc')->paginate(10);
+        $feedbacks = $this->feedbackRepository->getAllFeedbacks(10);
         return view('admin.pages.feedbacks', compact('feedbacks'));
     }
 
     public function showFeedback(Feedback $feedback)
     {
-        $feedback->load('user', 'product');
+        $feedback = $this->feedbackRepository->getFeedbackById($feedback->feedback_id);
         return response()->json([
             'feedback' => $feedback,
             'user' => $feedback->user,
@@ -440,7 +395,7 @@ class AdminController extends Controller
 
     public function deleteFeedback(Feedback $feedback)
     {
-        $feedback->delete();
+        $this->feedbackRepository->deleteFeedback($feedback->feedback_id);
         return redirect()->route('admin.feedbacks')->with('success', 'Feedback deleted successfully!');
     }
 
@@ -486,7 +441,7 @@ class AdminController extends Controller
                 return; // No change
             }
             
-            $order->update(['status' => $newStatus]);
+            $this->orderRepository->updateOrderStatus($order->order_id, $newStatus);
 
             StatusOrder::create([
                 'action_type' => $newStatus,
@@ -510,7 +465,7 @@ class AdminController extends Controller
 
     public function showOrderDetails(Order $order)
     {
-        $order->load('user', 'orderItems.product');
+        $order = $this->orderRepository->getOrderById($order->order_id);
         
         return response()->json([
             'order' => $order,
@@ -544,9 +499,13 @@ class AdminController extends Controller
             ], 403);
         }
 
-        $user->is_activate = !$user->is_activate;
-        $user->save();
+        if ($user->is_activate) {
+            $this->userRepository->deactivateUser($user->id);
+        } else {
+            $this->userRepository->activateUser($user->id);
+        }
 
+        $user->refresh();
         $status = $user->is_activate ? 'activated' : 'deactivated';
         return response()->json([
             'success' => true,

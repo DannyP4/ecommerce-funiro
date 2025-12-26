@@ -38,6 +38,13 @@
                         {{ __('Profile') }}
                     </a>
                     
+                    @if(Auth::check() && Auth::user()->role_id == 1)
+                    <a href="{{ route('admin.dashboard') }}" class="dropdown-item">
+                        <i class="fas fa-cog"></i>
+                        {{ __('Admin Panel') }}
+                    </a>
+                    @endif
+                    
                     <div class="dropdown-item language-selector">
                         <i class="fas fa-globe"></i>
                         {{ __('Language') }}

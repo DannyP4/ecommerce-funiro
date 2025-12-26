@@ -309,6 +309,9 @@
     transition: background 0.3s;
     height: 100%;
     min-width: 85px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .search-btn:hover {

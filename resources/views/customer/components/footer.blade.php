@@ -6,7 +6,7 @@
                 <p style="color: #666;">{{ __('Premium furniture for your home') }}</p>
             </div>
             <div style="color: #666;">
-                <p>&copy; 2024 Furniro. {{ __('All rights reserved') }}.</p>
+                <p>&copy; 2025 Furniro. {{ __('All rights reserved') }}.</p>
             </div>
         </div>
     </div>

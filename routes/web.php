@@ -24,7 +24,7 @@ use App\Http\Controllers\NotificationController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('customer.home');
 });
 
 Route::get('/dashboard', function () {

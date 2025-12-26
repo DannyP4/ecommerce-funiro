@@ -117,11 +117,42 @@ return [
     | provides a richer body of commands than a typical key-value system
     | such as APC or Memcached. Laravel makes it easy to dig right in.
     |
+    | ========================================================================
+    | REDIS MANAGEMENT COMMANDS (In Order of Use)
+    | ========================================================================
+    |
+    | 1. CHECK REDIS SERVER STATUS:
+    |    sudo systemctl status redis-server
+    |
+    | 2. START REDIS:
+    |    sudo systemctl start redis-server
+    |
+    | 3. TEST REDIS CONNECTION:
+    |    redis-cli ping
+    |
+    | 4. RUN QUEUE WORKER:
+    |    php artisan queue:work --tries=3 --timeout=60
+    |
+    | 5. CLEAR CONFIG CACHE:
+    |    php artisan config:clear
+    |    php artisan cache:clear
+    |
+    | ========================================================================
+    | OTHER REDIS COMMANDS (When Needed):
+    | ========================================================================
+    |
+    | - Stop Redis:            sudo systemctl stop redis-server
+    | - Restart Redis:         sudo systemctl restart redis-server
+    | - Enable auto-start:     sudo systemctl enable redis-server
+    | - Disable auto-start:    sudo systemctl disable redis-server
+    | - View Redis logs:       sudo journalctl -u redis-server -f
+    | - Enter Redis CLI:       redis-cli
+    | - Clear all keys:        redis-cli FLUSHALL
     */
 
     'redis' => [
 
-        'client' => env('REDIS_CLIENT', 'phpredis'),
+        'client' => env('REDIS_CLIENT', 'predis'),
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),

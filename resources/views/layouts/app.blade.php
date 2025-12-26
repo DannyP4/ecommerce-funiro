@@ -24,6 +24,20 @@
         </style>
     </head>
     <body class="font-sans antialiased">
+        <!-- Flash Messages for Toast Notifications -->
+        @if(session('success'))
+            <div data-flash-message="{{ session('success') }}" data-flash-type="success" style="display: none;"></div>
+        @endif
+        @if(session('error'))
+            <div data-flash-message="{{ session('error') }}" data-flash-type="error" style="display: none;"></div>
+        @endif
+        @if(session('warning'))
+            <div data-flash-message="{{ session('warning') }}" data-flash-type="warning" style="display: none;"></div>
+        @endif
+        @if(session('info'))
+            <div data-flash-message="{{ session('info') }}" data-flash-type="info" style="display: none;"></div>
+        @endif
+
         <div class="min-h-screen bg-white">
             @include('layouts.navigation')
 

@@ -71,31 +71,10 @@
 
     <!-- Team Section -->
     <div class="team-section">
-        <h2>{{ __('Meet Our Team') }}</h2>
-        <p class="team-subtitle">{{ __('Team 1 - The developers behind Furniro') }}</p>
+        <h2>{{ __('Meet Me') }}</h2>
+        <p class="team-subtitle">{{ __('The developers behind Furniro') }}</p>
         
         <div class="team-grid">
-            <!-- Team Member 1 -->
-            <div class="team-member">
-                <div class="member-avatar">
-                    <i class="fas fa-user-circle"></i>
-                </div>
-                <h3>Bùi Quang Hưng</h3>
-                <p class="member-role">{{ __('Full Stack Developer') }}</p>
-                <div class="member-contact">
-                    <div class="contact-item">
-                        <i class="fas fa-envelope"></i>
-                        <span>hung.bq225723@sis.hust.edu.vn</span>
-                    </div>
-                </div>
-                <div class="member-skills">
-                    <span class="skill-tag">Laravel</span>
-                    <span class="skill-tag">PHP</span>
-                    <span class="skill-tag">JavaScript</span>
-                </div>
-            </div>
-
-            <!-- Team Member 2 -->
             <div class="team-member">
                 <div class="member-avatar">
                     <i class="fas fa-user-circle"></i>
@@ -112,26 +91,6 @@
                     <span class="skill-tag">Laravel</span>
                     <span class="skill-tag">MySQL</span>
                     <span class="skill-tag">API Design</span>
-                </div>
-            </div>
-
-            <!-- Team Member 3 -->
-            <div class="team-member">
-                <div class="member-avatar">
-                    <i class="fas fa-user-circle"></i>
-                </div>
-                <h3>Đinh Đình Hải Việt</h3>
-                <p class="member-role">{{ __('Frontend Developer') }}</p>
-                <div class="member-contact">
-                    <div class="contact-item">
-                        <i class="fas fa-envelope"></i>
-                        <span>viet.ddh225683@sis.hust.edu.vn</span>
-                    </div>
-                </div>
-                <div class="member-skills">
-                    <span class="skill-tag">HTML/CSS</span>
-                    <span class="skill-tag">JavaScript</span>
-                    <span class="skill-tag">UI/UX</span>
                 </div>
             </div>
         </div>
@@ -199,7 +158,7 @@
 
 .contact-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 40px;
 }
 
@@ -246,7 +205,7 @@
 }
 
 .contact-details {
-    text-align: left;
+    text-align: center;
 }
 
 .contact-item {
@@ -255,6 +214,7 @@
     gap: 12px;
     margin-bottom: 15px;
     color: #555;
+    justify-content: center;
 }
 
 .contact-item i {
@@ -333,13 +293,14 @@
 }
 
 .member-contact {
-    text-align: left;
+    text-align: center;
     margin-bottom: 20px;
 }
 
 .member-contact .contact-item {
     margin-bottom: 10px;
     font-size: 14px;
+    justify-content: center;
 }
 
 .member-skills {
@@ -372,7 +333,7 @@
 
 .project-details {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 30px;
 }
 
@@ -423,6 +384,12 @@
     
     .project-details {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .project-details {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 </style>

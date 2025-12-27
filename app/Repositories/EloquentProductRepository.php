@@ -6,6 +6,7 @@ use App\Models\Product;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class EloquentProductRepository implements ProductRepository
@@ -134,12 +135,6 @@ class EloquentProductRepository implements ProductRepository
 
     private function handleImageUpload($image): string
     {
-        $imageDirectory = public_path(self::PRODUCT_IMAGE_DIR);
-
-        if (!File::exists($imageDirectory)) {
-            File::makeDirectory($imageDirectory, 0755, true);
-        }
-
         $mimeType = $image->getMimeType();
         if (!in_array($mimeType, self::ALLOWED_IMAGE_MIME_TYPES)) {
             throw new \InvalidArgumentException('Invalid image type.');
@@ -151,15 +146,31 @@ class EloquentProductRepository implements ProductRepository
 
         $extension = $image->getClientOriginalExtension();
         $filename = Str::uuid() . '.' . $extension;
-        $image->move($imageDirectory, $filename);
-
-        return '/' . self::PRODUCT_IMAGE_DIR . '/' . $filename;
+        $path = self::PRODUCT_IMAGE_DIR . '/' . $filename;
+        
+        // Upload to S3
+        Storage::disk('s3')->put($path, file_get_contents($image->getRealPath()), 'public');
+        
+        $bucket = config('filesystems.disks.s3.bucket');
+        $region = config('filesystems.disks.s3.region');
+        return "https://{$bucket}.s3.{$region}.amazonaws.com/{$path}";
     }
 
     private function deleteImage(Product $product): void
     {
-        if ($product->image && File::exists(public_path($product->image))) {
-            File::delete(public_path($product->image));
+        if ($product->image) {
+            // Extract path from S3 URL if it's a full URL
+            $path = $product->image;
+            if (filter_var($path, FILTER_VALIDATE_URL)) {
+                // Extract path from URL (remove domain part)
+                $parsedUrl = parse_url($path);
+                $path = ltrim($parsedUrl['path'], '/');
+            }
+            
+            // Delete from S3
+            if (Storage::disk('s3')->exists($path)) {
+                Storage::disk('s3')->delete($path);
+            }
         }
     }
 }

@@ -23,7 +23,7 @@
 <div class="feedback-container">
     <div class="product-info-section">
         <div class="product-summary">
-            <img src="{{ asset($product->image ?? 'images/default-product.svg') }}" alt="{{ $product->name }}" class="product-image">
+            <img src="{{ $product->image && filter_var($product->image, FILTER_VALIDATE_URL) ? $product->image : asset($product->image ?? 'images/default.jpg') }}" alt="{{ $product->name }}" class="product-image">
             <div class="product-details">
                 <h2>{{ $product->name }}</h2>
                 <p class="product-description">{{ $product->description }}</p>

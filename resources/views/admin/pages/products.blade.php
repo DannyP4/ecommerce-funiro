@@ -48,9 +48,9 @@
                         <td>
                             <div style="width: 50px; height: 50px; background: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
                                 @if($product->image)
-                                    <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                                    <img src="{{ filter_var($product->image, FILTER_VALIDATE_URL) ? $product->image : asset($product->image) }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
                                 @else
-                                    <i class="fas fa-image" style="color: #ccc;"></i>
+                                    <img src="{{ asset('images/default.jpg') }}" alt="Default" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
                                 @endif
                             </div>
                         </td>
@@ -147,7 +147,8 @@ function viewProductData(button) {
     const noImageEl = document.getElementById('view_no_image');
     
     if (data.productImage) {
-        imageEl.src = '/' + data.productImage;
+        // Check if it's a full URL (S3) or relative path (local)
+        imageEl.src = data.productImage.startsWith('http') ? data.productImage : '/' + data.productImage;
         imageEl.style.display = 'block';
         noImageEl.style.display = 'none';
     } else {
@@ -177,7 +178,8 @@ function editProductData(button) {
     let originalImageSrc = '';
     
     if (data.productImage && data.productImage !== '' && data.productImage !== 'null') {
-        originalImageSrc = '/' + data.productImage;
+        // Check if it's a full URL (S3) or relative path (local)
+        originalImageSrc = data.productImage.startsWith('http') ? data.productImage : '/' + data.productImage;
         editImageEl.src = originalImageSrc;
         editImageEl.style.display = 'block';
         editNoImageEl.style.display = 'none';

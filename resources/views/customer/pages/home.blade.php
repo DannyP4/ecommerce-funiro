@@ -33,7 +33,7 @@
             </div>
         </div>
         <div class="hero-image">
-            <img src="{{ asset('storage/home/hero-furniture.jpg') }}" alt="{{ __('Beautiful Furniture') }}" class="hero-img">
+            <img src="{{ asset('images/hero-furniture.jpg') }}" alt="{{ __('Beautiful Furniture') }}" class="hero-img">
         </div>
     </div>
 </section>
@@ -98,7 +98,7 @@
                 <div class="category-card">
                     <a href="{{ route('customer.products', $category->category_id) }}" class="category-link">
                         <div class="category-image">
-                            <img src="{{ asset($category->image ?? 'storage/images/categories/default.jpg') }}" 
+                            <img src="{{ asset($category->image ?? 'images/default.jpg') }}" 
                                  alt="{{ $category->name }}" 
                                  class="category-img">
                             <div class="category-overlay">
@@ -139,7 +139,7 @@
                 </div>
             </div>
             <div class="cta-image">
-                <img src="{{ asset('storage/home/cta-furniture.jpg') }}" alt="{{ __('Transform Your Home') }}" class="cta-img">
+                <img src="{{ asset('images/cta-furniture.jpg') }}" alt="{{ __('Transform Your Home') }}" class="cta-img">
             </div>
         </div>
     </section>

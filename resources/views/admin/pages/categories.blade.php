@@ -28,7 +28,9 @@
                         <td>#{{ $category->category_id }}</td>
                         <td>
 							@php
-								$imgSrc = $category->image ? asset($category->image) : asset('images/default-category.svg');
+								$imgSrc = $category->image 
+									? (filter_var($category->image, FILTER_VALIDATE_URL) ? $category->image : asset($category->image))
+									: asset('images/default.jpg');
 							@endphp
 							<img src="{{ $imgSrc }}" alt="{{ $category->name }}" style="width: 48px; height: 48px; object-fit: cover; border-radius: 6px; border: 1px solid #eee;">
 						</td>
@@ -89,7 +91,8 @@
             let originalImageSrc = '';
             
             if (image && image !== '' && image !== 'null') {
-                originalImageSrc = '/' + image;
+                // Check if it's a full URL (S3) or relative path (local)
+                originalImageSrc = image.startsWith('http') ? image : '/' + image;
                 editImageEl.src = originalImageSrc;
                 editImageEl.style.display = 'block';
                 editNoImageEl.style.display = 'none';

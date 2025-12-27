@@ -194,10 +194,3 @@ We welcome contributions to the this project! If you'd like to contribute, pleas
 ## 📄 License
 
 This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
-## 📧 Contact
-
-If you have any questions, suggestions, or need support, please feel free to reach out:
-
-*   **Mentor's GitHub**: [Nguyen Van Thinh](https://github.com/thinhnv-2059)
-*   **Issue**: https://github.com/awesome-academy/NAITEI-PHP-T8-NHOM1/issues

@@ -84,7 +84,7 @@
     @forelse($products as $product)
     <div class="product-card">
         <div class="product-image">
-            <img src="{{ asset($product->image ?? 'images/default-product.svg') }}" alt="{{ $product->name }}">
+            <img src="{{ $product->image && filter_var($product->image, FILTER_VALIDATE_URL) ? $product->image : asset($product->image ?? 'images/default.jpg') }}" alt="{{ $product->name }}">
             
             <!-- Product badges -->
             @if(!empty($product->discount_percentage))

@@ -46,7 +46,7 @@
 				@foreach($cart as $item)
 					<div class="cart-row">
 						<div class="col-product">
-							<img src="{{ asset($item['image'] ?? 'images/default-product.svg') }}" alt="{{ $item['name'] }}">
+							<img src="{{ isset($item['image']) && filter_var($item['image'], FILTER_VALIDATE_URL) ? $item['image'] : asset($item['image'] ?? 'images/default.jpg') }}" alt="{{ $item['name'] }}">
 							<div class="info">
 								<div class="name">{{ $item['name'] }}</div>
 								<div class="sku">#{{ $item['product_id'] }}</div>

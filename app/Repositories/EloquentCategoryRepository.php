@@ -6,6 +6,7 @@ use App\Models\Category;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class EloquentCategoryRepository implements CategoryRepository
@@ -81,8 +82,19 @@ class EloquentCategoryRepository implements CategoryRepository
 
     public function deleteImage(Category $category): void
     {
-        if ($category->image && File::exists(public_path($category->image))) {
-            File::delete(public_path($category->image));
+        if ($category->image) {
+            // Extract path from S3 URL if it's a full URL
+            $path = $category->image;
+            if (filter_var($path, FILTER_VALIDATE_URL)) {
+                // Extract path from URL (remove domain part)
+                $parsedUrl = parse_url($path);
+                $path = ltrim($parsedUrl['path'], '/');
+            }
+            
+            // Delete from S3
+            if (Storage::disk('s3')->exists($path)) {
+                Storage::disk('s3')->delete($path);
+            }
         }
     }
 
@@ -101,7 +113,14 @@ class EloquentCategoryRepository implements CategoryRepository
         }
 
         $imageName = Str::uuid() . '.' . $image->getClientOriginalExtension();
-        $image->move(public_path(self::CATEGORY_IMAGE_DIR), $imageName);
-        return self::CATEGORY_IMAGE_DIR . '/' . $imageName;
+        $path = self::CATEGORY_IMAGE_DIR . '/' . $imageName;
+        
+        // Upload to S3
+        Storage::disk('s3')->put($path, file_get_contents($image->getRealPath()), 'public');
+        
+        // Build and return S3 URL
+        $bucket = config('filesystems.disks.s3.bucket');
+        $region = config('filesystems.disks.s3.region');
+        return "https://{$bucket}.s3.{$region}.amazonaws.com/{$path}";
     }
 } 

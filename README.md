@@ -6,7 +6,7 @@ Furniro E-commerce Platform is a robust and user-friendly web application built 
 
 This platform aims to provide a seamless online shopping experience for customers and an intuitive management system for administrators. It is built with modern web technologies, ensuring a responsive and efficient application.
 
-## 👨‍💻 Phát triển bởi
+## 👨‍💻 Developed by
 
 The project was developed by the following contributors until 29/08/2025:  
 Bui Quang Hung ([@Gnuhq26](https://github.com/Gnuhq26)), Pham Duc Long ([@DannyP4](https://github.com/DannyP4)), and Dinh Dinh Hai Viet (([@20225683-vietddh](https://github.com/20225683-vietddh))).  
@@ -95,8 +95,7 @@ Ensure you have the following installed on your system:
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/awesome-academy/NAITEI-PHP-T8-NHOM1.git
-    cd NAITEI-PHP-T8-NHOM1
+    git clone https://github.com/DannyP4/ecommerce-funiro.git
     ```
 
 2.  **Install PHP Dependencies:**
@@ -178,18 +177,6 @@ Below are some useful resources and documentation that were referenced during th
 - [Google OAuth API Documentation](https://developers.google.com/identity/protocols/oauth2)
 
 These references can help you better understand the technologies and tools used in this project.
-
-## 👥 Contributing
-
-We welcome contributions to the this project! If you'd like to contribute, please follow these steps:
-
-1. Fork this repository.
-2. Create a new branch for your feature or bug fix (`git checkout -b your-branch-name`).
-3. Make your changes, ensuring they follow the project's coding standards.
-4. Write relevant tests for your changes.
-5. Commit your changes (`git commit -m "Describe your changes"`).
-6. Push your branch to your fork (`git push origin your-branch-name`).
-7. Open a pull request to the main repository.
 
 ## 📄 License
 

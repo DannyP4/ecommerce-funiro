@@ -62,9 +62,9 @@
                     </div>
                     
                     <div class="dropdown-divider"></div>
-                    <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
+                    <form method="POST" action="{{ route('logout') }}" id="logoutForm" style="margin: 0;">
                         @csrf
-                        <button type="submit" class="dropdown-item logout-btn">
+                        <button type="button" class="dropdown-item logout-btn" onclick="confirmLogout()">
                             <i class="fas fa-sign-out-alt"></i>
                             {{ __('Logout') }}
                         </button>
@@ -279,6 +279,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// Logout confirmation with simple alert
+function confirmLogout() {
+    if (confirm('{{ __("Are you sure you want to logout?") }}')) {
+        document.getElementById('logoutForm').submit();
+    }
+}
 
 // Cart shake animation function
 function shakeCart() {

@@ -35,7 +35,7 @@
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-phone"></i>
-                        <span>+84 (24) 3868 3008</span>
+                        <span>+84 (09) 1234 5678</span>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-clock"></i>
@@ -108,12 +108,12 @@
             <div class="project-item">
                 <i class="fas fa-users"></i>
                 <h4>{{ __('Team') }}</h4>
-                <p>{{ __('NAITEI-PHP') }}</p>
+                <p>{{ __('36') }}</p>
             </div>
             <div class="project-item">
                 <i class="fas fa-calendar"></i>
                 <h4>{{ __('Development Period') }}</h4>
-                <p>{{ __('August 2024 - Present') }}</p>
+                <p>{{ __('Oct 2025 - Present') }}</p>
             </div>
             <div class="project-item">
                 <i class="fas fa-github"></i>

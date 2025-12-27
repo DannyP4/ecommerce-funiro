@@ -8,7 +8,8 @@
         
         <ul class="nav-menu">
             <li><a href="{{ route('customer.home') }}" class="{{ request()->routeIs('customer.home') ? 'active' : '' }}">{{ __('Home') }}</a></li>
-            <li><a href="{{ route('customer.categories') }}" class="{{ request()->routeIs('customer.categories') || request()->routeIs('customer.products') ? 'active' : '' }}">{{ __('Shop') }}</a></li>
+            <li><a href="{{ route('customer.categories') }}" class="{{ request()->routeIs('customer.categories') || request()->routeIs('customer.products') ? 'active' : '' }}">{{ __('Categories') }}</a></li>
+            <li><a href="{{ route('customer.orders') }}" class="{{ request()->routeIs('customer.orders*') ? 'active' : '' }}">{{ __('Orders') }}</a></li>
             <li><a href="{{ route('customer.about') }}" class="{{ request()->routeIs('customer.about') ? 'active' : '' }}">{{ __('About') }}</a></li>
             <li><a href="{{ route('customer.contact') }}" class="{{ request()->routeIs('customer.contact') ? 'active' : '' }}">{{ __('Contact') }}</a></li>
         </ul>
@@ -23,15 +24,23 @@
                     <span class="cart-count">{{ count(session('cart')) }}</span>
                 @endif
             </a>
-            <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+            <form method="POST" action="{{ route('logout') }}" id="logout-form" style="display: inline;">
                 @csrf
-                <button type="submit" style="background: none; border: none; color: #333; font-size: 18px; cursor: pointer; transition: color 0.3s;" title="{{ __('Log Out') }}" onmouseover="this.style.color='#B88E2F'" onmouseout="this.style.color='#333'">
+                <button type="button" onclick="confirmLogout()" style="background: none; border: none; color: #333; font-size: 18px; cursor: pointer; transition: color 0.3s;" title="{{ __('Log Out') }}" onmouseover="this.style.color='#B88E2F'" onmouseout="this.style.color='#333'">
                     <i class="fas fa-sign-out-alt"></i>
                 </button>
             </form>
         </div>
     </div>
 </header>
+
+<script>
+function confirmLogout() {
+    if (confirm('{{ __("Are you sure you want to logout?") }}')) {
+        document.getElementById('logout-form').submit();
+    }
+}
+</script>
 
 <style>
     :root {

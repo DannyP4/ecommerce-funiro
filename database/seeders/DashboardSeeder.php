@@ -72,7 +72,9 @@ class DashboardSeeder extends Seeder
                     'customer_id' => $user->id,
                     'order_date' => $date->format('Y-m-d'),
                     'total_cost' => 0,
-                    'status' => 'approved',
+                    'status' => 'delivered',
+                    'payment_method' => 'cod',
+                    'payment_status' => 'paid',
                     'created_at' => $date,
                     'updated_at' => $date,
                 ]);

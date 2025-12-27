@@ -13,14 +13,14 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            ['name' => 'Living Room', 'image' => 'storage/images/categories/living-room.jpg'],
-            ['name' => 'Bedroom', 'image' => 'storage/images/categories/bedroom.jpg'],
-            ['name' => 'Dining Room', 'image' => 'storage/images/categories/dining-room.jpg'],
-            ['name' => 'Office', 'image' => 'storage/images/categories/office.jpg'],
-            ['name' => 'Kitchen', 'image' => 'storage/images/categories/kitchen.jpg'],
-            ['name' => 'Bathroom', 'image' => 'storage/images/categories/bathroom.jpg'],
-            ['name' => 'Outdoor', 'image' => 'storage/images/categories/outdoor.jpg'],
-            ['name' => 'Storage', 'image' => 'storage/images/categories/storage.jpg'],
+            ['name' => 'Living Room', 'image' => 'images/category/livingroom.jpg'],
+            ['name' => 'Bedroom', 'image' => 'images/category/bedroom.png'],
+            ['name' => 'Dining Room', 'image' => 'images/category/diningroom.jpg'],
+            ['name' => 'Office', 'image' => 'images/category/office.jpg'],
+            ['name' => 'Kitchen', 'image' => 'images/category/kitchen.jpg'],
+            ['name' => 'Bathroom', 'image' => 'images/category/bathroom.jpeg'],
+            ['name' => 'Outdoor', 'image' => 'images/category/outdoor.jpg'],
+            ['name' => 'Storage', 'image' => 'images/category/storage.jpg'],
         ];
 
         foreach ($categories as $category) {

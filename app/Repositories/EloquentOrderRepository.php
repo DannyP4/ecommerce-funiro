@@ -143,22 +143,10 @@ class EloquentOrderRepository implements OrderRepository
     
     public function getRevenueByDate(string $date): float
     {
-        return Order::where(function($query) use ($date) {
-            $query->where(function($q) use ($date) {
-                $q->where('payment_method', 'cod')
-                  ->where('status', 'delivered')
-                  ->whereDate('updated_at', $date);
-            })
-            ->orWhere(function($q) use ($date) {
-                $q->where('payment_method', 'vnpay')
-                  ->where('payment_status', 'paid')
-                  ->where('status', '!=', 'cancelled')
-                  ->where(function($dateQ) use ($date) {
-                      $dateQ->whereDate('order_date', $date)
-                           ->orWhereDate('updated_at', $date);
-                  });
-            });
-        })->sum('total_cost');
+        return Order::where('payment_status', 'paid')
+            ->where('status', '!=', 'cancelled')
+            ->whereDate('order_date', $date)
+            ->sum('total_cost');
     }
     
     public function countDeliveredBetween($startDate, $endDate): int

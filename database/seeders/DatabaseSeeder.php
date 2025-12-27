@@ -3,7 +3,10 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Role;
 use Illuminate\Database\Seeder;
+use ParagonIE\Sodium\Core\Curve25519\Fe;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,11 +16,14 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            RoleSeeder::class,
-            UserSeeder::class,
-            CustomerSeeder::class,
             CategorySeeder::class,
+            CustomerSeeder::class,
+            DashboardSeeder::class,
+            FeedbackSeeder::class,
+            OrderSeeder::class,
             ProductSeeder::class,
+            UserSeeder::class,
+            RoleSeeder::class,
         ]);
     }
 }

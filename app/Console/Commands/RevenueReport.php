@@ -36,8 +36,6 @@ class RevenueReport extends Command
 
             $this->info("Generating daily revenue report for {$date->format('Y-m-d')}...");
 
-            // get delivered orders that were PAID on the specified date
-            // Use order_date (when order was placed and paid) instead of updated_at
             $orders = Order::with(['user', 'orderItems.product'])
                 ->where('payment_status', 'paid')
                 ->where('status', '!=', 'cancelled')

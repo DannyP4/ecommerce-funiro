@@ -96,6 +96,7 @@
                         <th>{{ __('Customer') }}</th>
                         <th>{{ __('Order Date') }}</th>
                         <th>{{ __('Total Amount') }}</th>
+                        <th style="text-align: center;">{{ __('Payment Status') }}</th>
                         <th>{{ __('Status') }}</th>
                         <th>{{ __('Actions') }}</th>
                     </tr>
@@ -107,6 +108,14 @@
                         <td>{{ $order->user->user_name ?? $order->user->name ?? __('N/A') }}</td>
                         <td>{{ $order->order_date ? \Carbon\Carbon::parse($order->order_date)->format('d/m/Y') : __('N/A') }}</td>
                         <td>{{ number_format($order->total_cost) }} {{ __('VNĐ') }}</td>
+                        <td style="text-align: center;">
+                            @php
+                                $paymentStatus = $order->payment_status ?? 'pending';
+                            @endphp
+                            <span class="status-badge {{ $paymentStatus === 'paid' ? 'status-approved' : 'status-pending' }}">
+                                {{ $paymentStatus === 'paid' ? __('Paid') : __('Pending') }}
+                            </span>
+                        </td>
                         <td>
                             @php
                                 $status = $order->status ?? 'pending';
@@ -164,7 +173,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" style="text-align: center;">{{ __('No orders found') }}</td>
+                        <td colspan="7" style="text-align: center;">{{ __('No orders found') }}</td>
                     </tr>
                     @endforelse
                 </tbody>

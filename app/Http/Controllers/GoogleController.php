@@ -66,14 +66,16 @@ class GoogleController extends Controller
 
             // Log::info('User logged in successfully: ' . $user->email);
 
-            // If the user is new, redirect to profile edit with a welcome message
             if ($isNewUser) {
                 return redirect('/profile')
                     ->with('welcome_message', 'Welcome, ' . $user->name . '! Your account has been created successfully. Please change your password after logging in.');
             }
 
-            // Else redirect to customer categories
-            return redirect('/customer/categories');
+            if ($user->role_id === Role::ADMIN) {
+                return redirect('/admin/dashboard');
+            } else {
+                return redirect('/customer/home');
+            }
 
         } catch (\Exception $e) {
             // Log::error('Google callback error: ' . $e->getMessage());

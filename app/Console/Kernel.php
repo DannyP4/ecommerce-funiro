@@ -12,6 +12,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
+        $schedule->command('queue:work --stop-when-empty --max-jobs=50')
+                ->everyMinute()
+                ->withoutOverlapping();
+        
         // send daily revenue report at 23:59 every day
         $schedule->command('report:daily-revenue')
                 //->everyMinute() // log test

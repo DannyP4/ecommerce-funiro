@@ -93,15 +93,19 @@ class EloquentOrderRepository implements OrderRepository
 
     public function getRevenueByDateRange(string $startDate, string $endDate): float
     {
-        return Order::where(function($query) {
-            $query->whereIn('status', ['delivering', 'delivered'])
-                  ->orWhere(function($q) {
-                      $q->where('payment_status', 'paid')
-                        ->where('status', '!=', 'cancelled');
-                  });
-        })
-        ->whereBetween('order_date', [$startDate, $endDate])
-        ->sum('total_cost');
+        $codRevenue = Order::where('payment_method', 'cod')
+            ->where('status', 'delivered')
+            ->where('payment_status', 'paid')
+            ->whereBetween('order_date', [$startDate, $endDate])
+            ->sum('total_cost');
+        
+        $vnpayRevenue = Order::where('payment_method', 'vnpay')
+            ->where('payment_status', 'paid')
+            ->where('status', '!=', 'cancelled')
+            ->whereBetween('order_date', [$startDate, $endDate])
+            ->sum('total_cost');
+        
+        return $codRevenue + $vnpayRevenue;
     }
 
     public function count(): int
@@ -143,10 +147,19 @@ class EloquentOrderRepository implements OrderRepository
     
     public function getRevenueByDate(string $date): float
     {
-        return Order::where('payment_status', 'paid')
+        $codRevenue = Order::where('payment_method', 'cod')
+            ->where('status', 'delivered')
+            ->where('payment_status', 'paid')
+            ->whereDate('order_date', $date)
+            ->sum('total_cost');
+        
+        $vnpayRevenue = Order::where('payment_method', 'vnpay')
+            ->where('payment_status', 'paid')
             ->where('status', '!=', 'cancelled')
             ->whereDate('order_date', $date)
             ->sum('total_cost');
+        
+        return $codRevenue + $vnpayRevenue;
     }
     
     public function countDeliveredBetween($startDate, $endDate): int

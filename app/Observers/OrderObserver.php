@@ -37,6 +37,11 @@ class OrderObserver
         // Load the customer relationship
         $order->load('user');
         
+        if ($order->status === 'delivered' && $order->payment_method === 'cod' && $order->payment_status !== 'paid') {
+            $order->payment_status = 'paid';
+            $order->saveQuietly(); // Save without triggering observer again
+        }
+        
         switch ($order->status) {
             case 'approved':
                 Mail::to($order->user->email)->send(new OrderApproved($order));

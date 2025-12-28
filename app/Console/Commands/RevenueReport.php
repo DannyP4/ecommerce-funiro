@@ -36,24 +36,20 @@ class RevenueReport extends Command
 
             $this->info("Generating daily revenue report for {$date->format('Y-m-d')}...");
 
-            // get delivered orders for the specified date
+            // get delivered orders that were PAID on the specified date
+            // Use order_date (when order was placed and paid) instead of updated_at
             $orders = Order::with(['user', 'orderItems.product'])
-                ->where('status', 'delivered')
-                ->where(function($query) use ($date) {
-                    $query->whereDate('updated_at', $date)
-                          ->orWhere(function($subQuery) use ($date) {
-                              $subQuery->whereDate('created_at', $date)
-                                       ->where('status', 'delivered');
-                          });
-                })
-                ->orderBy('updated_at', 'desc')
+                ->where('payment_status', 'paid')
+                ->where('status', '!=', 'cancelled')
+                ->whereDate('order_date', $date)
+                ->orderBy('order_date', 'desc')
                 ->get();
 
             // calculate total revenue
             $totalRevenue = $orders->sum('total_cost');
             $totalOrders = $orders->count();
 
-            $this->info("Found {$totalOrders} delivered orders with total revenue: " . number_format($totalRevenue) . " VNĐ");
+            $this->info("Found {$totalOrders} paid orders with total revenue: " . number_format($totalRevenue) . " VNĐ");
 
             // get all admin users and still active
             $admins = User::where('role_id', Role::ADMIN)

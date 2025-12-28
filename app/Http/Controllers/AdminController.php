@@ -130,7 +130,10 @@ class AdminController extends Controller
         $lastWeekStart = now()->subDays(6)->startOfDay();
         $lastWeekEnd = now()->endOfDay();
         
-        $completedOrders = $this->orderRepository->countDeliveredBetween($lastWeekStart, $lastWeekEnd);
+        // Count orders with payment_status='paid' in the last 7 days
+        $paidOrders = Order::where('payment_status', 'paid')
+            ->whereBetween('order_date', [$lastWeekStart, $lastWeekEnd])
+            ->count();
             
         $totalOrdersThisWeek = $this->orderRepository->countByDateRange($lastWeekStart, $lastWeekEnd);
 
@@ -147,7 +150,7 @@ class AdminController extends Controller
             'newOrders' => $newOrders,
             'newFeedbacks' => $newFeedbacks,
             'dailyRevenue' => $dailyRevenue,
-            'completedOrders' => $completedOrders,
+            'paidOrders' => $paidOrders,
             'totalOrdersThisWeek' => $totalOrdersThisWeek,
             'ratingDistribution' => $ratingDistribution
         ]);

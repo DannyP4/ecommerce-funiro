@@ -117,8 +117,8 @@
                         <canvas id="newOrdersChart"></canvas>
                     </div>
                     <div class="chart-section">
-                        <h4>{{ __('Completed Orders') }}</h4>
-                        <canvas id="completedOrdersChart"></canvas>
+                        <h4>{{ __('Paid Orders') }}</h4>
+                        <canvas id="paidOrdersChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -149,7 +149,7 @@
 const TIMEOUT_MS = 200;
 
 window.dashboardTranslations = {
-    completed: "{{ __('Completed') }}",
+    paid: "{{ __('Paid') }}",
     pending: "{{ __('Pending') }}",
     oneStar: "{{ __('1 star') }}",
     twoStars: "{{ __('2 stars') }}",

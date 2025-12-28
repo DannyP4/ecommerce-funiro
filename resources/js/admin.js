@@ -27,7 +27,7 @@ class AdminPanel {
                 this.renderOrderedProductsChart(data);
                 this.renderNewOrdersChart(data);
                 this.renderNewFeedbacksChart(data);
-                this.renderCompletedOrdersChart(data);
+                this.renderPaidOrdersChart(data);
                 this.renderRatingDistributionChart(data);
             })
             .catch(error => {
@@ -253,27 +253,27 @@ class AdminPanel {
         });
     }
 
-    renderCompletedOrdersChart(data) {
-        const ctx = document.getElementById('completedOrdersChart');
+    renderPaidOrdersChart(data) {
+        const ctx = document.getElementById('paidOrdersChart');
         if (!ctx) return;
 
-        // calculate pending orders in the week
-        const completedOrders = data.completedOrders || 0;
+        // calculate paid vs pending payment orders in the week
+        const paidOrders = data.paidOrders || 0;
         const totalOrders = data.totalOrdersThisWeek || 1;
-        const pendingOrders = Math.max(0, totalOrders - completedOrders);
+        const pendingOrders = Math.max(0, totalOrders - paidOrders);
 
         new Chart(ctx, {
             type: 'doughnut',
             data: {
                 labels: [
-                    window.dashboardTranslations?.completed || 'Completed',
+                    window.dashboardTranslations?.paid || 'Paid',
                     window.dashboardTranslations?.pending || 'Pending'
                 ],
                 datasets: [{
-                    data: [completedOrders, pendingOrders],
+                    data: [paidOrders, pendingOrders],
                     backgroundColor: [
-                        '#28a745', // Green - completed
-                        '#ffc107'  // Yellow - pending
+                        '#28a745',
+                        '#ffc107'
                     ],
                     borderColor: [
                         '#1e7e34',

@@ -32,6 +32,10 @@ class RevenueReport extends Command
     {
         try {
             // get the date from command argument or use today's date
+            /*
+            php artisan report:daily-revenue
+            php artisan report:daily-revenue 2025-12-27
+            */
             $date = $this->argument('date') ? Carbon::parse($this->argument('date')) : Carbon::today();
 
             $this->info("Generating daily revenue report for {$date->format('Y-m-d')}...");

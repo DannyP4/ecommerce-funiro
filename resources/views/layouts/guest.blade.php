@@ -26,7 +26,7 @@
     <body class="font-sans text-gray-900 antialiased">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-white">
             <div>
-                <a href="{{ route('customer.home') }}" class="flex items-center gap-2 text-3xl font-bold" style="color: #B88E2F;">
+                <a href="{{ route('home') }}" class="flex items-center gap-2 text-3xl font-bold" style="color: #B88E2F;">
                     <i class="fas fa-couch"></i>
                     <span>Furniro</span>
                 </a>

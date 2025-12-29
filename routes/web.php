@@ -23,8 +23,11 @@ use App\Http\Controllers\NotificationController;
 |
 */
 
-Route::get('/', function () {
-    return redirect()->route('customer.home');
+Route::get('/', [CustomerController::class, 'home'])->name('home');
+
+Route::prefix('customer')->name('customer.')->group(function () {
+    Route::get('/about', [CustomerController::class, 'about'])->name('about');
+    Route::get('/contact', [CustomerController::class, 'contact'])->name('contact');
 });
 
 Route::get('/dashboard', function () {
@@ -37,16 +40,13 @@ Route::middleware(['auth', 'check.user.activation'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Customer routes - require authentication
+// Customer routes
 Route::middleware(['auth', 'check.user.activation'])->prefix('customer')->name('customer.')->group(function () {
-    Route::get('/home', [CustomerController::class, 'home'])->name('home');
     Route::get('/categories', [CustomerController::class, 'categories'])->name('categories');
     Route::get('/products/{category}', [CustomerController::class, 'products'])->name('products');
     Route::get('/orders', [CustomerController::class, 'orders'])->name('orders');
     Route::get('/orders/{order}', [CustomerController::class, 'orderDetails'])->name('orders.details');
     Route::post('/orders/{order}/cancel', [CustomerController::class, 'cancelOrder'])->name('orders.cancel');
-    Route::get('/about', [CustomerController::class, 'about'])->name('about');
-    Route::get('/contact', [CustomerController::class, 'contact'])->name('contact');
 
     // Cart routes
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');

@@ -39,7 +39,7 @@ class AuthenticatedSessionController extends Controller
             return redirect('/admin/dashboard');
         } else {
             // Customer - redirect to home page
-            return redirect('/customer/home');
+            return redirect()->route('home');
         }
     }
 
@@ -54,6 +54,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect()->route('home');
     }
 }

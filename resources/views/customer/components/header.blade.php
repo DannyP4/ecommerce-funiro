@@ -1,19 +1,22 @@
 <header class="header">
     <div class="header-container">
-        <a href="{{ route('customer.home') }}" class="logo">
+        <a href="{{ route('home') }}" class="logo">
             <i class="fas fa-couch"></i>
             Furniro
         </a>
         
         <nav class="nav-menu">
-            <a href="{{ route('customer.home') }}" class="{{ request()->routeIs('customer.home') ? 'active' : '' }}">{{ __('Home') }}</a>
+            <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">{{ __('Home') }}</a>
+            @auth
             <a href="{{ route('customer.categories') }}" class="{{ request()->routeIs('customer.categories') ? 'active' : '' }}">{{ __('Categories') }}</a>
             <a href="{{ route('customer.orders') }}" class="{{ request()->routeIs('customer.orders*') ? 'active' : '' }}">{{ __('Orders') }}</a>
+            @endauth
             <a href="{{ route('customer.about') }}" class="{{ request()->routeIs('customer.about') ? 'active' : '' }}">{{ __('About') }}</a>
             <a href="{{ route('customer.contact') }}" class="{{ request()->routeIs('customer.contact') ? 'active' : '' }}">{{ __('Contact') }}</a>
         </nav>
         
         <div class="header-icons">
+            @auth
             @php
                 $cart = session('cart', []);
                 $cartCount = 0;
@@ -28,6 +31,16 @@
                 <span class="cart-count">{{ $cartCount }}</span>
                 @endif
             </a>
+            @endauth
+            
+            @guest
+            <a href="{{ route('login') }}" class="btn-login">
+                <i class="fas fa-sign-in-alt"></i>
+                {{ __('Login') }}
+            </a>
+            @endguest
+            
+            @auth
             <div class="user-dropdown user-avatar-wrapper">
                 <a href="#" id="userDropdown" class="user-avatar">
                     <i class="fas fa-user"></i>
@@ -71,11 +84,33 @@
                     </form>
                 </div>
             </div>
+            @endauth
         </div>
     </div>
 </header>
 
 <style>
+.btn-login {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #B88E2F;
+    color: white !important;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(184, 142, 47, 0.2);
+}
+
+.btn-login:hover {
+    background: #A67C00;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(184, 142, 47, 0.3);
+    color: white !important;
+}
+
 .user-dropdown, .user-avatar-wrapper {
     position: relative;
 }

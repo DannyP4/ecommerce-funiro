@@ -1,13 +1,13 @@
 <!-- Customer Header Navigation -->
 <header class="header">
     <div class="header-container">
-        <a href="{{ route('customer.home') }}" class="logo">
+        <a href="{{ route('home') }}" class="logo">
             <i class="fas fa-couch"></i>
             <span>Furniro</span>
         </a>
         
         <ul class="nav-menu">
-            <li><a href="{{ route('customer.home') }}" class="{{ request()->routeIs('customer.home') ? 'active' : '' }}">{{ __('Home') }}</a></li>
+            <li><a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">{{ __('Home') }}</a></li>
             <li><a href="{{ route('customer.categories') }}" class="{{ request()->routeIs('customer.categories') || request()->routeIs('customer.products') ? 'active' : '' }}">{{ __('Categories') }}</a></li>
             <li><a href="{{ route('customer.orders') }}" class="{{ request()->routeIs('customer.orders*') ? 'active' : '' }}">{{ __('Orders') }}</a></li>
             <li><a href="{{ route('customer.about') }}" class="{{ request()->routeIs('customer.about') ? 'active' : '' }}">{{ __('About') }}</a></li>

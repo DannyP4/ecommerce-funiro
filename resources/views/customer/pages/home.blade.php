@@ -23,10 +23,17 @@
                 </div>
             </div>
             <div class="hero-actions">
+                @auth
                 <a href="{{ route('customer.categories') }}" class="btn-outline">
                     <i class="fas fa-shopping-bag"></i>
                     {{ __('Shop Now') }}
                 </a>
+                @else
+                <a href="{{ route('login') }}" class="btn-outline">
+                    <i class="fas fa-shopping-bag"></i>
+                    {{ __('Shop Now') }}
+                </a>
+                @endauth
                 <a href="{{ route('customer.about') }}" class="btn-outline">
                     {{ __('Learn More') }}
                 </a>

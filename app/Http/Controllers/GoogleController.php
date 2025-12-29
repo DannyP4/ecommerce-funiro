@@ -74,7 +74,7 @@ class GoogleController extends Controller
             if ($user->role_id === Role::ADMIN) {
                 return redirect('/admin/dashboard');
             } else {
-                return redirect('/customer/home');
+                return redirect()->route('home');
             }
 
         } catch (\Exception $e) {

@@ -33,7 +33,7 @@
             <i class="fas fa-star"></i>
             <span>{{ __('Feedbacks') }}</span>
         </a>
-        <a href="{{ route('customer.home') }}" class="menu-item" target="_blank">
+        <a href="{{ route('home') }}" class="menu-item" target="_blank">
             <i class="fas fa-store"></i>
             <span>{{ __('View Customer Site') }}</span>
         </a>

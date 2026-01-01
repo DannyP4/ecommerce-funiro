@@ -110,14 +110,14 @@
                         <i class="fas fa-comments"></i>
                         {{ __('Feedback') }}
                     </a>
-                    <button class="action-btn">
+                    {{-- <button class="action-btn">
                         <i class="fas fa-random"></i>
                         {{ __('Compare') }}
                     </button>
                     <button class="action-btn">
                         <i class="fas fa-heart"></i>
                         {{ __('Like') }}
-                    </button>
+                    </button> --}}
                 </div>
             </div>
         </div>
@@ -520,14 +520,10 @@ document.addEventListener('DOMContentLoaded', function () {
             qtyInput.value = '1';
             form.appendChild(qtyInput); // Append the quantity input to the form.
 
-            // Append the dynamically created form to the document body.
-            // This is necessary for the form to be submit-able by JavaScript.
             document.body.appendChild(form);
 
             sessionStorage.setItem('scrollPosition', window.scrollY);
 
-            // Submit the form programmatically.
-            // This will trigger a POST request to the specified URL.
             form.submit();
             
             // Trigger cart shake animation

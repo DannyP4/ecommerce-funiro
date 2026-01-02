@@ -31,6 +31,11 @@ class Order extends Model
         'vnpay_data' => 'array',
     ];
 
+    public function getRouteKeyName()
+    {
+        return 'order_id';
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'customer_id');

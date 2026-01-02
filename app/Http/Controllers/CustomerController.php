@@ -239,14 +239,15 @@ class CustomerController extends Controller
     /**
      * Display detailed information about a specific order
      */
-    public function orderDetails($orderId)
+    public function orderDetails(Order $order)
     {
         $customer = Auth::user();
         
-        // Get specific order with all related data
-        $order = Order::with(['orderItems.product', 'statusOrders.admin', 'user'])
-              ->where('customer_id', $customer->id)
-              ->findOrFail($orderId);
+        if ($order->customer_id !== $customer->id) {
+            abort(403, 'Unauthorized access to this order.');
+        }
+        
+        $order->load(['orderItems.product', 'statusOrders.admin', 'user']);
         
         $subtotal = $order->orderItems->sum(function($item) {
             return $item->price * $item->quantity;

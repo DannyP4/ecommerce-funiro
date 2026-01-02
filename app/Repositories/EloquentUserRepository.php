@@ -96,7 +96,7 @@ class EloquentUserRepository implements UserRepository
             return null;
         }
 
-        $user->update(['is_active' => true]);
+        $user->update(['is_activate' => true]);
 
         return $user->fresh();
     }
@@ -109,7 +109,7 @@ class EloquentUserRepository implements UserRepository
             return null;
         }
 
-        $user->update(['is_active' => false]);
+        $user->update(['is_activate' => false]);
 
         return $user->fresh();
     }
